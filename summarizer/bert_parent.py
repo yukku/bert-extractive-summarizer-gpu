@@ -50,8 +50,12 @@ class BertParent(object):
         else:
             self.tokenizer = base_tokenizer.from_pretrained(model)
 
+        self.device = torch.device(
+            "cuda" if torch.cuda.is_available() else "cpu"
+        )
+        self.model.to(self.device)
+        # self.model.cuda()
         self.model.eval()
-        self.model.cuda()
 
     def tokenize_input(self, text: str) -> torch.tensor:
         """
@@ -83,6 +87,9 @@ class BertParent(object):
         """
 
         tokens_tensor = self.tokenize_input(text)
+
+        tokens_tensor = tokens_tensor.to(self.device)
+
         pooled, hidden_states = self.model(tokens_tensor)[-2:]
 
         if -1 > hidden > -12:

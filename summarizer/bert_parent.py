@@ -119,17 +119,17 @@ class BertParent(object):
         :param reduce_option: The reduce option to run.
         :return: A numpy array matrix of the given content.
         """
+        temp = []
+        for t in content:
+            embedding = self.extract_embeddings(
+                t, hidden=hidden, reduce_option=reduce_option
+            )
 
-        return np.asarray(
-            [
-                np.squeeze(
-                    self.extract_embeddings(
-                        t, hidden=hidden, reduce_option=reduce_option
-                    ).data.numpy()
-                )
-                for t in content
-            ]
-        )
+            out = np.squeeze(embedding.cpu().data.numpy())
+            temp.append(out)
+
+        # .cpu()
+        return np.asarray(temp)
 
     def __call__(
         self, content: List[str], hidden: int = -2, reduce_option: str = "mean"

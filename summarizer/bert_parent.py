@@ -54,7 +54,7 @@ class BertParent(object):
             "cuda" if torch.cuda.is_available() else "cpu"
         )
         self.model.to(self.device)
-        # self.model.cuda()
+        self.model.cuda()
         self.model.eval()
 
     def tokenize_input(self, text: str) -> torch.tensor:
